@@ -15,13 +15,6 @@ public class Set<T> implements ISet<T>, Iterable<T> {
 		_array = (T[]) new Object[1];
 	}
 	
-	
-	@Override
-	public Iterator<T> iterator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Override
 	public void add(Object o){
 		//
@@ -87,12 +80,66 @@ public class Set<T> implements ISet<T>, Iterable<T> {
 			return false;
 	}
 	
+	
+	// iterator
+	
+	private class Iter implements Iterator<T>{
+		private int ind = 0;
+		
+		public boolean hasNext() {
+			if (ind<_size)
+				return true;
+			else
+				return false;
+		}
+		
+		public T next() {
+			if (ind==_size)
+				throw new NoSuchElementException();
+			else
+			{
+				T result = _array[ind];
+				ind++;
+				return result;
+			}
+		}
+		
+		
+		public void remove() {
+			// TODO Auto-generated method stub
+			T[] tmp = (T[]) new Object[_array.length-1];
+			if (ind > 0)
+				System.arraycopy(_array, 0, tmp, 0, ind);
+			System.arraycopy(_array, ind , tmp, ind-1 , _array.length-ind);
+			if (_size>0)
+				_size--;
+			_array = tmp;
+			}
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		// TODO Auto-generated method stub
+		return new Iter();
+	}	
+	
+	
+	// вообще лишние "вспомогателные" функции
+	// my "help-functions"
 	public void isin(Object o) {
 		if ( this.contains( o ) ){
 			System.out.print("\n Object " + o + " is in our set ");
 		}else {
-			System.out.print("\n Object " + o + " is not in our set ");
+			System.out.print("\n Object " + o + " is absent ");
 		}
 	}
+	
+	public void show() {
+		// TODO Auto-generated method stub
+		for( int i =0 ; i < _size ; i++ ){
+			System.out.print("\n Object № " +i +" : "+ _array[i] + " " + _array[i].getClass() );
+		}
+	}
+	
 	
 }
