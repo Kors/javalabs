@@ -1,0 +1,54 @@
+
+import java.util.Calendar;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+public class main {
+
+	/**
+	 * @param args
+	 * Ягоды в саду.
+	 * Два враждующих соседа разделены полем с ягодами.
+	 * Они разрешили друг другу выходить на поле и собирать ягоды,
+	 * но им нужно быть уверенным что только один из них находится
+	 * на поле в каждый момент времени.
+	 * После долгих споров они приняли следующий протокол действий:
+	 * Когда один из соседей хочет пойти на поле, он поднимает флаг.
+	 * Если он видит флаг своего соседа,
+	 * он не заходит на поле и спускает свой флаг и пробует снова.
+	 * Если он не видит флага соседа,
+	 * он входит на поле и собирает ягоды.
+	 * Он опускает свой флаг сразу как выйдет с поля.
+	 * Смоделировать эту ситуацию.
+	 * Имеется два соседа, N1 и N2.
+	 * Необходимо обеспечить раздельный доступ к полю в соответствии
+	 * с протоколом.
+	 * Добавить свойство “Progress” для соседей (количество ягод),
+	 * чтобы контролировать справедливость протокола.
+	 */
+
+
+	public static void main(String[] args) {
+		System.out.print("\nMain begin!\n");
+		//////************///////
+		final int neighbourCount = 2;
+		Thread[] threads = new Thread[neighbourCount];
+		//////************///////
+		neighbour neighbour[] = new neighbour[neighbourCount];
+		for (int i = 0; i < neighbourCount; i++) {
+			neighbour[i] = new neighbour(i+1);
+			threads[i] = new Thread(neighbour[i]);
+		}
+		
+		for (int i=0; i<neighbourCount; i++)
+			threads[i].start();
+		
+		for (int i=0; i<100; i++)
+			System.out.print(".");
+			
+		System.out.print("\nla-la-la...!\n");
+		System.out.print("\nla-la-la...!\n");
+	}
+
+}

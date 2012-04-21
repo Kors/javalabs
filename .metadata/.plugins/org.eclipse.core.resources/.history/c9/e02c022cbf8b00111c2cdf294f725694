@@ -1,0 +1,18 @@
+package files;
+import files.*;
+
+import java.util.Random;
+
+public class field_of_berries {
+
+	Random rand = new Random();
+	
+	public field_of_berries(int neighbourNumber){
+		System.out.print("\nсосед " + neighbourNumber + " вышел в поле");
+		try {
+			Thread.sleep(1000 + rand.nextInt(2000) );
+		} catch (InterruptedException ex) {
+		}
+		System.out.print("\nсосед " + neighbourNumber + " вернулся к себе");
+	}
+}

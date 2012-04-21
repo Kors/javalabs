@@ -1,0 +1,21 @@
+import java.util.concurrent.locks.ReadWriteLock;
+
+
+public class neighbour implements Runnable {
+	
+	private ReadWriteLock _flag;
+	private int number = 0 ;
+	
+	public neighbour(int neighbourCount) {
+		// TODO Auto-generated constructor stub
+		number=neighbourCount;
+		System.out.print("\nNeighbour " + number + " begin!\n");
+	}
+
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
+}

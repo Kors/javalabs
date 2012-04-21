@@ -1,0 +1,27 @@
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.Random;
+
+public class neighbour implements Runnable {
+
+	Random rand = new Random();
+	private ReadWriteLock _flag;
+	private int _neighbourNumber = 0 ;
+	
+	private int _temp = 0 ;
+	
+	
+	public neighbour(int neighbourNumber) {
+		this._neighbourNumber = neighbourNumber;
+	}
+
+	@Override
+	public void run() {
+		System.out.println("\nNeighbour "+ _neighbourNumber +" running");
+		while (true){
+			_temp+=1;
+			//this.sleep(rand.nextInt());
+			if (_temp == 10000)
+				System.out.print("\n" +_neighbourNumber);
+		}
+	}
+}
