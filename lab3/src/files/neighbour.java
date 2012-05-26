@@ -1,4 +1,4 @@
-package files;
+п»їpackage files;
 
 import files.*;
 
@@ -35,19 +35,19 @@ public class neighbour implements Runnable{
 	public void run() {
 		System.out.println("\nNeighbour "+ _neighbourNumber + " START");
 		while (true){
-			System.out.print("\nсосед " +_neighbourNumber + " собирается набрать ягод");
+			System.out.print("\nСЃРѕСЃРµРґ " +_neighbourNumber + " СЃРѕР±РёСЂР°РµС‚СЃСЏ РЅР°Р±СЂР°С‚СЊ СЏРіРѕРґ");
 
 			if ( tryGoToField() ){
 				_tmp = _field.get_berries(_neighbourNumber);
-				System.out.print("\nсосед " + _neighbourNumber + 
-						" вернулся к себе, принеся " + 
-						 _tmp + "кг ягод. =)" +
-						"\n и опустил флаг.");
+				System.out.print("\nСЃРѕСЃРµРґ " + _neighbourNumber + 
+						" РІРµСЂРЅСѓР»СЃСЏ Рє СЃРµР±Рµ, РїСЂРёРЅРµСЃСЏ " + 
+						 _tmp + "РєРі СЏРіРѕРґ. =)" +
+						"\n Рё РѕРїСѓСЃС‚РёР» С„Р»Р°Рі.");
 				_countOfGoingToField += 1 ;
 				_countOfBerries += _tmp;
 				this.set_flag( false ); 
 			}else{
-				System.out.print("\nсосед " +_neighbourNumber + " увидел флаг и ждет =(");
+				System.out.print("\nСЃРѕСЃРµРґ " +_neighbourNumber + " СѓРІРёРґРµР» С„Р»Р°Рі Рё Р¶РґРµС‚ =(");
 			}
 
 			try {
