@@ -7,11 +7,15 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import java.util.concurrent.locks.*;
+
 //старт сервера
 public class ChatServer {
 
+	static private Lock clientsListLock = new ReentrantLock();
+	static private Lock messageLock = new ReentrantLock();
 	static private int port = 7000;	
-	static ExecutorService pool = Executors.newFixedThreadPool(10);
+	//static ExecutorService pool = Executors.newFixedThreadPool(10);
 
 	public static ArrayList<ClientAccount> clients;
 
@@ -25,7 +29,8 @@ public class ChatServer {
 			final Socket client = servSocket.accept();
 			System.out.println("Connected: client port=" + client.getPort());
 
-			pool.submit(new Runnable() {
+			//pool.submit(new Runnable() {
+			new Thread(new Runnable() {
 				@Override
 				public void run() {
 					try {
@@ -34,7 +39,8 @@ public class ChatServer {
 						e.printStackTrace();
 					}
 				}
-			});
+				//});
+			}).start();
 		}
 	}
 
@@ -45,14 +51,17 @@ public class ChatServer {
 		// создадим "безымянного" клиента по умолчанию.
 		ClientAccount clientAcc = new ClientAccount("somebody_"+socket.getPort(), socket );	
 		//добавим в список:
+		clientsListLock.lock();
 		clients.add(clientAcc);
+		clientsListLock.unlock();
+
 		LogIn(clientAcc);
-		
+
 		while (true){
 			try{
 				// пытаемся принять сообщение от клиента
 				Message m = (Message) clientAcc.ois.readObject();
-				
+
 				// разделим сообщения по типу
 				switch ( m.getNum() ){
 				//тип "логин" ( сменить имя )
@@ -62,7 +71,7 @@ public class ChatServer {
 					Send(m1);
 					clientAcc.userName = m.getUser();	
 					break;
-				//тип "сообщение"
+					//тип "сообщение"
 				case	2:	
 					m.setUser(clientAcc.userName);
 					Send(m);
@@ -76,37 +85,46 @@ public class ChatServer {
 				//remove from list
 				RemoveClient(clientAcc);
 				Message m1 = new Message("server", 0, clientAcc.userName +" отключился от чата. " );
-				Send(m1);
-				clientAcc.ois.close();		
+				Send(m1);	
 				break;
 			}
 
 		}
 	}
 
-	private static void LogIn(ClientAccount client) throws IOException, java.net.SocketException {
+	private static void LogIn(ClientAccount client) {
 		Message m1 = new Message("server", 0, "К чату присоединился новенький.\n  Ему присвоено временное имя " + client.userName );
 		Send(m1);
-
 	}
-	
 
-	private static void Send(Message m) throws IOException, java.net.SocketException {
-		// здесь надо пробегать по списку и рассылать всем.
+
+	private static void Send(Message m)  {
+		// здесь надо пробегать по списку и рассылать всем.throws IOException  java.net.SocketException
+		messageLock.lock();
 		System.out.println(m);
 
 		for (int i = 0; i < clients.size(); i++) {
-			clients.get(i).send(m);
-		}
 
+
+			try {
+				clients.get(i).send(m);
+			} catch (Exception e) {
+				//e.printStackTrace();
+			}
+
+		}
+		messageLock.unlock();
 
 	}
-	
-	private static void RemoveClient(ClientAccount client) throws IOException {
+
+	private static void RemoveClient(ClientAccount client){
 		// здесь надо пробегать по списку и удалять. 
 		//System.out.println("удаляем клиента");
+		clientsListLock.lock();
 		clients.remove(client);
+		clientsListLock.unlock();
+
 
 	}	
-	
+
 }

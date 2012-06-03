@@ -51,8 +51,6 @@ public class ClientInWindow{
 			}
 			// отображаем текст сообщения в окне
 			textArea.append(localMessage.toString()+"\n");
-			//перемотка на последнее сообщение
-			textArea.setCaretPosition(textArea.getDocument().getLength());
 		}		
 	}
 }

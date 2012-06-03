@@ -41,12 +41,7 @@ public class Client {
 					//socket.recieveMessa;ges(textArea);
 				} catch (Exception e) {
 					//e.printStackTrace();
-					try {
-						ois.close();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					System.exit(1);
 				}
 			}
 		});
@@ -76,26 +71,9 @@ public class Client {
 		while(true){			
 			try {
 				localMessage = (Message) ois.readObject();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
+			} catch (Exception e) {
 				//e.printStackTrace();
-				try {
-					ois.close();
-					break;
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
-				try {
-					ois.close();
-					break;
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				System.exit(1);
 			}
 			System.out.println(localMessage);			
 		}		

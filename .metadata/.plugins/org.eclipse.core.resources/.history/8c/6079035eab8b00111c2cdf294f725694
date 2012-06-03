@@ -1,8 +1,0 @@
-
-public class neighbour {
-	
-	public static void neighbour() {
-
-		System.out.print("\nNeighbour begin!\n");
-	}
-}

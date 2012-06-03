@@ -45,14 +45,25 @@ public class ClientInWindow{
 		while(true){			
 			try {
 				localMessage = (Message) ois.readObject();
-			} catch (Exception e) {
+			} catch (IOException e) {
 				//e.printStackTrace();
-				System.exit(1);
+				try {
+					ois.close();
+					break;
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			} catch (ClassNotFoundException e) {
+				//e.printStackTrace();
+				try {
+					ois.close();
+					break;
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 			// отображаем текст сообщения в окне
 			textArea.append(localMessage.toString()+"\n");
-			//перемотка на последнее сообщение
-			textArea.setCaretPosition(textArea.getDocument().getLength());
 		}		
 	}
 }
@@ -77,7 +88,7 @@ class ChatFrame extends JFrame {
 		header.add(new JLabel("Ваше имя:", SwingConstants.LEFT));
 		final JTextField LoginField = new JTextField();
 		// кнопка логин
-		//JButton loginButton = new JButton("Изменить");
+		JButton loginButton = new JButton("Изменить");
 		// добавляем это всё в header
 		header.add(LoginField);
 		//header.add(loginButton);

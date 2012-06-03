@@ -41,22 +41,9 @@ public class AppClient {
 		while(true){			
 			try {
 				localMessage = (Message) ois.readObject();
-			} catch (IOException e) {
-				//e.printStackTrace();
-				try {
-					ois.close();
+			} catch (Exception e) {
+					System.exit(1);
 					break;
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			} catch (ClassNotFoundException e) {
-				//e.printStackTrace();
-				try {
-					ois.close();
-					break;
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
 			}
 			System.out.println(localMessage);			
 		}		

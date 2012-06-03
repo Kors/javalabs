@@ -23,8 +23,14 @@ public class ClientAccount {
 		}
 	}
 
-	public void send(Message m) throws IOException {
-		oos.writeObject(m);
+	public void send(Message m) {
+		//throws IOException 
+		try {
+			oos.writeObject(m);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+		}
 	}
 
 	public String getInputString() {
