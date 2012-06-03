@@ -13,23 +13,18 @@ public class ChatServer {
 	static private int port = 7000;	
 	static ExecutorService pool = Executors.newFixedThreadPool(10);
 
-	
-	private ObjectOutputStream oos;
-	private ObjectInputStream ois;
-	
-	
 	public static ArrayList<ClientAccount> clients;
-	
-////////////////////////////////////// ожидание клиентов	
+
+	////////////////////////////////////// ожидание клиентов	
 	public static void main(String[] args) throws Exception {
 		System.out.println("Server start. port № " + port);
 		ServerSocket servSocket = new ServerSocket(port);
 		clients = new ArrayList<ClientAccount>(); 
-		
+
 		while(true) {
 			final Socket client = servSocket.accept();
 			System.out.println("Connected: client port=" + client.getPort());
-			
+
 			pool.submit(new Runnable() {
 				@Override
 				public void run() {
@@ -42,48 +37,76 @@ public class ChatServer {
 			});
 		}
 	}
-	
-	
-	
-////////////////////////////////////// обработка каждого клиента отдельно 
-	private static void serve(Socket socket) throws Exception {
-		//добавим в список:
-		
-		//clients.add(new ClientAccount("testName", socket));
-		//// установка потоков ввода-вывода.			
-		//input stream
-		ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-		ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-//Object
-		//ClientAccount cl = new ClientAccount("name", socket );		
-		
-			while (true){
-					try{
-						System.out.println("***");
-						Message m = (Message) ois.readObject();
-						System.out.println("***2");
-						Send(m);
-					} catch (Exception e) {
-						e.printStackTrace();
-						ois.close();
-						break;
-					} finally{
-						//remove from list
-					}
 
+
+
+	////////////////////////////////////// обработка каждого клиента отдельно 
+	private static void serve(Socket socket) throws Exception {
+		// создадим "безымянного" клиента по умолчанию.
+		ClientAccount clientAcc = new ClientAccount("somebody_"+socket.getPort(), socket );	
+		//добавим в список:
+		clients.add(clientAcc);
+		LogIn(clientAcc);
+		
+		while (true){
+			try{
+				// пытаемся принять сообщение от клиента
+				Message m = (Message) clientAcc.ois.readObject();
+				
+				// разделим сообщения по типу
+				switch ( m.getNum() ){
+				//тип "логин" ( сменить имя )
+				case	1:
+					//System.out.println( clientAcc.userName +" сменил имя на "+ m.getUser() );
+					Message m1 = new Message("server", 0, clientAcc.userName +" сменил имя на "+ m.getUser() );
+					Send(m1);
+					clientAcc.userName = m.getUser();	
+					break;
+				//тип "сообщение"
+				case	2:	
+					m.setUser(clientAcc.userName);
+					Send(m);
+					break;
+				default:
+					System.out.println("Type of message unknown!");
+					break;
+				}
+			} catch (Exception e) {
+				//e.printStackTrace();
+				//remove from list
+				RemoveClient(clientAcc);
+				Message m1 = new Message("server", 0, clientAcc.userName +" отключился от чата. " );
+				Send(m1);
+				clientAcc.ois.close();		
+				break;
 			}
+
+		}
 	}
 
+	private static void LogIn(ClientAccount client) throws IOException, java.net.SocketException {
+		Message m1 = new Message("server", 0, "К чату присоединился новенький.\n  Ему присвоено временное имя " + client.userName );
+		Send(m1);
 
+	}
+	
 
-	private static void Send(Message m) {
+	private static void Send(Message m) throws IOException, java.net.SocketException {
 		// здесь надо пробегать по списку и рассылать всем.
 		System.out.println(m);
 
-		//for (int i = 0; i < clients.size(); i++) {
-		//	clients.get(i).send(m);
-		//}
+		for (int i = 0; i < clients.size(); i++) {
+			clients.get(i).send(m);
+		}
 
 
 	}
+	
+	private static void RemoveClient(ClientAccount client) throws IOException {
+		// здесь надо пробегать по списку и удалять. 
+		//System.out.println("удаляем клиента");
+		clients.remove(client);
+
+	}	
+	
 }

@@ -3,9 +3,9 @@
 import java.io.Serializable;
 
 public class Message implements Serializable {
-	private String user;
-	private int num;
-	private String message;
+	private String user;	// имя отправителя.
+	private int num;		// тип сообщения
+	private String message;	// само сообщение
 	
 	public Message(String user, int num, String message) {
 		super();
@@ -34,7 +34,8 @@ public class Message implements Serializable {
 	
 	@Override
 	public String toString() {
-		return num + " " + user + ": " + message;
+		//num + " " + 
+		return user + ": " + message;
 	}
 	
 	

@@ -1,7 +1,9 @@
 
 //package ru.spbstu.telematics.javatechnologies.lection12;
 
-import java.io.DataInputStream;
+// тестовый клиент без интерактива. 
+
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -10,30 +12,63 @@ import java.net.Socket;
 
 
 public class Client {
-	
+
+
 	static private int port = 7000;	
 	static private String servIP = "localhost";
 
 	public static Thread listener;
 	
+	public Client(int sPort, String ip) {
+		port = sPort;	
+		servIP = ip;
+	}
+
 	public static void main(String[] args) throws Exception {
-/////////////////////////////// установка соединения и потоков ввода-вывода.		
+		/////////////////////////////// установка соединения и потоков ввода-вывода.		
 		Socket socket = new Socket();
 		socket.connect(new InetSocketAddress(servIP, port));	
-		
-		ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-		
+
+		final ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+		final ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+
+		listener = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					Listen( ois );
+					//socket.recieveMessa;ges(textArea);
+				} catch (Exception e) {
+					//e.printStackTrace();
+					try {
+						ois.close();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		listener.start();
+
 		String user = "Vova";
 		int type = 1;
 		String m = "test";
 		Message message = new Message(user, type, m);
+
+		oos.writeObject(message);
+		for(long j =  0; j<500000000 ; j++){}
+
 		
+		type = 2;
+		message = new Message(user, type, m);
 		for(int i=0; i<5 ; i++){
-			
+
 			oos.writeObject(message);
-			
+			for(long j =  0; j<500000000 ; j++){}
+
 		}	
-		
 	}
 
 	protected static void Listen(ObjectInputStream ois) {
@@ -43,14 +78,28 @@ public class Client {
 				localMessage = (Message) ois.readObject();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
+				try {
+					ois.close();
+					break;
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
+				try {
+					ois.close();
+					break;
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 			System.out.println(localMessage);			
 		}		
 	}
-	
+
 }
 
