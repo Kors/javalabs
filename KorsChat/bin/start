@@ -1,0 +1,3 @@
+#!/bin/bash
+cd /home/ilya/java/javalabs/KorsChat/bin/
+java ClientInWindow

@@ -58,7 +58,7 @@ public class Client {
 		
 		type = 2;
 		message = new Message(user, type, m);
-		for(int i=0; i<5 ; i++){
+		for(int i=0; i<50 ; i++){
 
 			oos.writeObject(message);
 			for(long j =  0; j<500000000 ; j++){}

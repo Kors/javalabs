@@ -11,7 +11,7 @@ public class ClientInWindow{
 
 	public static void main(String[] args) {
 
-		final AppClient client = new AppClient( 7000,  "localhost" ); //"192.168.0.98"""192.168.1.105
+		final AppClient client = new AppClient( 7000, "localhost");
 
 		// создаем фрейм Чата
 		final ChatFrame frame = new ChatFrame(client);

@@ -52,8 +52,11 @@ public class ChatServer {
 		ClientAccount clientAcc = new ClientAccount("somebody_"+socket.getPort(), socket );	
 		//добавим в список:
 		clientsListLock.lock();
-		clients.add(clientAcc);
-		clientsListLock.unlock();
+		try{
+			clients.add(clientAcc);
+		}finally{ 
+			clientsListLock.unlock();
+		}
 
 		LogIn(clientAcc);
 
@@ -99,32 +102,33 @@ public class ChatServer {
 
 
 	private static void Send(Message m)  {
-		// здесь надо пробегать по списку и рассылать всем.throws IOException  java.net.SocketException
+		// здесь надо пробегать по списку и рассылать всем.  throws IOException  java.net.SocketException
 		messageLock.lock();
-		System.out.println(m);
-
-		for (int i = 0; i < clients.size(); i++) {
-
-
-			try {
-				clients.get(i).send(m);
-			} catch (Exception e) {
-				//e.printStackTrace();
+		clientsListLock.lock();
+		try {
+			System.out.println(m);
+			for (int i = 0; i < clients.size(); i++) {
+				try {
+					clients.get(i).send(m);
+				} catch (Exception e) {
+					//e.printStackTrace();
+				}
 			}
-
+		}finally{
+			clientsListLock.unlock();
+			messageLock.unlock();
 		}
-		messageLock.unlock();
-
 	}
 
 	private static void RemoveClient(ClientAccount client){
 		// здесь надо пробегать по списку и удалять. 
 		//System.out.println("удаляем клиента");
 		clientsListLock.lock();
-		clients.remove(client);
-		clientsListLock.unlock();
-
-
+		try{
+			clients.remove(client);
+		}finally{
+			clientsListLock.unlock();
+		}
 	}	
 
 }

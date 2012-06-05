@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<workbench progressCount="20" version="2.0">
+<workbench progressCount="17" version="2.0">
 <workbenchAdvisor/>
 <window height="768" maximized="true" width="1024" x="115" y="115">
 <fastViewData fastViewLocation="1024"/>
@@ -34,7 +34,7 @@
 </editorArea>
 <editor activePart="true" focus="true" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="ClientInWindow.java" partName="ClientInWindow.java" path="C:/Users/ilya/Documents/_Политех_/2012/java/javalabs/KorsChat/src/ClientInWindow.java" title="ClientInWindow.java" tooltip="KorsChat/src/ClientInWindow.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/KorsChat/src/ClientInWindow.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="814" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1255" selectionTopPixel="0"/>
 </editor>
 </editors>
 <views>
